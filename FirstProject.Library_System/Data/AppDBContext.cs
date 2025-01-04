@@ -1,5 +1,4 @@
-﻿using FirstProject.Library_System.Data.Config;
-using FirstProject.Library_System.Entities;
+﻿using FirstProject.Library_System.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -13,10 +12,20 @@ namespace FirstProject.Library_System.Data
 {
     public class AppDBContext : DbContext
     {
-        public DbSet<Book> ?Book { get; set; }
-        public DbSet<Order> ?Orders { get; set; }
-        public DbSet<OrderDetails> ?OrdersDetails { get; set; }
-        public DbSet<Customer> ?Customer { get; set; }
-        
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+
+            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+
+            var ConnectionString = config.GetSection("constr").Value;
+
+            optionsBuilder.UseSqlServer(ConnectionString);
+        }
+        //public DbSet<Book> ?Book { get; set; }
+        //public DbSet<Order> ?Orders { get; set; }
+        //public DbSet<OrderDetails> ?OrdersDetails { get; set; }
+        //public DbSet<Customer> ?Customer { get; set; }
+
     }
 }
